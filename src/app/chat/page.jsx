@@ -154,9 +154,6 @@ function page() {
             <Link target="_blank" href="/policy" class="mr-4 hover:underline md:mr-6">Privacy Policy</Link>
         </li>
         <li>
-            <Link href="#" class="mr-4 hover:underline md:mr-6">Licensing</Link>
-        </li>
-        <li>
             <Link href="https://kobakoo.com/contact" class="hover:underline">Contact</Link>
         </li>
     </ul>
