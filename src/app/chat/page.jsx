@@ -48,7 +48,7 @@ function page() {
   </div>
 </nav>
 
-      <button onClick={openModal} type="button" class="flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+      <button onClick={openModal} type="button" class=" mt-4 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
         <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" /></svg>
         <p className='ml-1'>部屋を作る</p>
@@ -141,6 +141,28 @@ function page() {
           </div>
         </Dialog>
       </Transition>
+
+<footer class="bg-white rounded-lg shadow m-4 dark:bg-gray-800 fixed bottom-1 w-10/12">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <Link href="https://kobakoo.com/" class="hover:underline" target='_blank'>KBK Corp</Link>. All Rights Reserved.
+    </span>
+    <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+        <li>
+            <Link href="https://kobakoo.com" class="mr-4 hover:underline md:mr-6 ">About</Link>
+        </li>
+        <li>
+            <Link target="_blank" href="/policy" class="mr-4 hover:underline md:mr-6">Privacy Policy</Link>
+        </li>
+        <li>
+            <Link href="#" class="mr-4 hover:underline md:mr-6">Licensing</Link>
+        </li>
+        <li>
+            <Link href="https://kobakoo.com/contact" class="hover:underline">Contact</Link>
+        </li>
+    </ul>
+    </div>
+</footer>
+
     </div>
   )
 }
