@@ -1,4 +1,6 @@
 import './globals.css'
+import { logEvent } from "firebase/analytics";
+import {analytics} from "@/lib/FirebaseConfig";
 
 export const metadata = {
   title: 'ChatKBK',
@@ -6,6 +8,7 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  logEvent(analytics, 'notification_received');
   return (
     <html lang="ja">
       <body>{children}</body>

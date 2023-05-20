@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -8,12 +10,15 @@ import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "chatapp-by-kbk.firebaseapp.com",
+  databaseURL: "https://chatapp-by-kbk-default-rtdb.firebaseio.com",
   projectId: "chatapp-by-kbk",
   storageBucket: "chatapp-by-kbk.appspot.com",
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.FIREBASE_APP_ID,
+  measurementId: "G-ZPDHPNGVSN"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+const analytics = getAnalytics(app);
