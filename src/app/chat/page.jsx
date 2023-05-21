@@ -38,7 +38,11 @@ function page() {
   return (
     //チャット一覧を表示
     <div className='md:m-20 sm:m-10 m-2'>
-
+      <title>ChatKBK｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！</title>
+      <link
+          rel="canonical"
+          href="https://chat.kobakoo.com/chat"
+        />
 <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <Link href="/" class="flex items-center">

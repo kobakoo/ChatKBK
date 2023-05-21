@@ -1,9 +1,15 @@
 import React from "react";
 import Link from "next/link";
+import Head from 'next/head';
 
 export default function policy(){
   return(
     <div className="lg:mx-28 md:mx-14 sm:mx-10 mx-5">
+      <title>ChatKBK｜Policy</title>
+        <link
+          rel="canonical"
+          href="https://chat.kobakoo.com/policy"
+        />
     <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 sm:mx-10 m-2">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" class="flex items-center">

@@ -60,6 +60,11 @@ function page() {
           </Link>
         </div>
       </nav>
+      <title>ChatKBK｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！</title>
+      <link
+          rel="canonical"
+          href={`https://chat.kobakoo.com/chat/${params.roomId}`}
+        />
       <h1>{chats.name}</h1>
       <div className=' my-20 md:mx-16 sm:mx-8 mx-2'>
         {chats.map((chat)=>(
