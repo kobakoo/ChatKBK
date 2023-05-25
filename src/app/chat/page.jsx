@@ -51,10 +51,10 @@ function page() {
         />
       <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <Link href="/" class="flex items-center">
+          <a href="/" class="flex items-center">
               <img src="https://kobakoo.com/logo.svg" class="h-8 w-auto mr-3" alt="kbk Logo" />
               <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">ChatKBK</span>
-          </Link>
+          </a>
         </div>
       </nav>
       <button onClick={openModal} type="button" class=" mt-4 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
