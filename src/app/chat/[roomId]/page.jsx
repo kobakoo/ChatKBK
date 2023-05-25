@@ -81,7 +81,7 @@ function page() {
   },[params.roomId])
 
   const handleClick = () => {
-    window.location.href = `http://chat.kobakoo.com/chat/${params.roomId}?pass=${userPassword}`;
+    router.push(`/chat/${params.roomId}?pass=${userPassword}`);
   }
 
   return (
