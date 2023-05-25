@@ -81,7 +81,7 @@ function page() {
   },[params.roomId])
 
   const handleClick = () => {
-    window.location.href = `http://localhost:3000/chat/${params.roomId}?pass=${userPassword}`;
+    window.location.href = `http://chat.kobakoo.com/chat/${params.roomId}?pass=${userPassword}`;
   }
 
   return (
