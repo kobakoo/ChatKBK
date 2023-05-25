@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.8.1",
     "@headlessui/react": "^1.7.14",
     "@netlify/plugin-nextjs": "^4.37.1",
     "clipboard": "^2.0.11",
@@ -21,7 +22,8 @@
     "lottie-react": "^2.4.0",
     "next": "13.4.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-tooltip": "^5.13.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

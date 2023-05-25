@@ -13,7 +13,7 @@ export default function policy(){
     <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 sm:mx-10 m-2">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" class="flex items-center">
-            <img src="https://kobakoo.com/logo.svg" class="h-8 w-auto mr-3" alt="Flowbite Logo" />
+            <Image src="https://kobakoo.com/logo.svg" class="h-8 w-auto mr-3" alt="kbk Logo" width={150} height={100}/>
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">ChatKBK</span>
         </Link>
       </div>
