@@ -55,11 +55,11 @@ function page() {
   const getPass = searchParams.get("pass");
   // const pass = searchParams.get('pass');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function startUp() {
     const docRef = doc(db, "rooms", params.roomId);
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
-    const data = docSnap.data();
     if (docSnap.get("enabled") === true) {
       setEnabled(docSnap.get("enabled"));
     } else {
@@ -117,45 +117,66 @@ function page() {
       .map(() => S[Math.floor(Math.random() * S.length)])
       .join("");
     // console.log(`${random}${e.target.files[0].name}`);
-    const storageRef = ref(storage, `image/${random}${e.target.files[0].name}`);
-    var res = confirm(`「${e.target.files[0].name}」を送信してもいいですか?`);
-    if (res == true) {
-      // uploadBytes(storageRef, e.target.files[0].name).then((snapshot) => {
-      //   console.log("Uploaded a blob or file!");
-      // });
-      const uploadImage = uploadBytesResumable(storageRef, e.target.files[0]);
-      uploadImage.on(
-        "state_changed",
-        (snapshot) => {
-          // setLoading();
-        },
-        (err) => {
-          setLoading(false);
-          toast.error(`エラー「${err}」が発生しました`);
-        },
-        () => {
-          setLoading(true);
-          toast.success("アップロードが完了しました!");
-          getDownloadURL(uploadImage.snapshot.ref).then(
-            async (downloadURL) => {
-              console.log("File available at", downloadURL);
-              const chat_id = String(chats.length + 1000000001);
-              await setDoc(doc(db, "rooms", params.roomId, "chats", chat_id), {
-                chat: downloadURL,
-                author: author,
-                type: "image",
-                // id: chat_id
-              });
-              toast.success("投稿が完了しました!");
+    const sizeLimit = 1024 * 1024 * 1;
+    console.log(e.target.files[0]);
+    if (e.target.files[0].size > sizeLimit) {
+      toast.error("ファイルサイズが大きすぎます！ 1MB以下にしてください");
+    } else {
+      if (e.target.files[0].type.includes("image") === false) {
+        toast.error("画像を貼ってください!!");
+      } else {
+        const storageRef = ref(
+          storage,
+          `image/${random}${e.target.files[0].name}`
+        );
+        var res = confirm(
+          `「${e.target.files[0].name}」を送信してもいいですか?`
+        );
+        if (res == true) {
+          // uploadBytes(storageRef, e.target.files[0].name).then((snapshot) => {
+          //   console.log("Uploaded a blob or file!");
+          // });
+          const uploadImage = uploadBytesResumable(
+            storageRef,
+            e.target.files[0]
+          );
+          uploadImage.on(
+            "state_changed",
+            (snapshot) => {
+              // setLoading();
             },
             (err) => {
-              toast.error(`エラー「${err.toString()}」が発生しました`);
+              setLoading(false);
+              toast.error(`エラー「${err}」が発生しました`);
+            },
+            () => {
+              setLoading(true);
+              toast.success("アップロードが完了しました!");
+              getDownloadURL(uploadImage.snapshot.ref).then(
+                async (downloadURL) => {
+                  console.log("File available at", downloadURL);
+                  const chat_id = String(chats.length + 1000000001);
+                  await setDoc(
+                    doc(db, "rooms", params.roomId, "chats", chat_id),
+                    {
+                      chat: downloadURL,
+                      author: author,
+                      type: "image",
+                      // id: chat_id
+                    }
+                  );
+                  toast.success("投稿が完了しました!");
+                },
+                (err) => {
+                  toast.error(`エラー「${err.toString()}」が発生しました`);
+                }
+              );
             }
           );
+        } else {
+          toast.error("画像を送信できませんでした");
         }
-      );
-    } else {
-      toast.error("画像を送信できませんでした");
+      }
     }
   };
   return (
