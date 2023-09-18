@@ -297,12 +297,15 @@ function page() {
                   className=""
                 >
                   {chat.type ? (
-                    <div className="w-full p-3 bg-sky-100">
+                    <div className="w-full p-3 bg-sky-100 sm:flex">
                       <img
                         src={chat.chat}
                         alt={chat.chat}
                         className=" w-96 h-auto"
                       />
+                      <p className="ml-1 items-end bottom-1 md:text-lg sm:text-sm text-xs">
+                        by {chat.author}
+                      </p>
                     </div>
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
