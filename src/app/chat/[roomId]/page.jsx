@@ -155,7 +155,7 @@ function page() {
               getDownloadURL(uploadImage.snapshot.ref).then(
                 async (downloadURL) => {
                   console.log("File available at", downloadURL);
-                  const chat_id = String(chats.length + 1000000001);
+                  const chat_id = String(chats.length + 1000000000);
                   await setDoc(
                     doc(db, "rooms", params.roomId, "chats", chat_id),
                     {
