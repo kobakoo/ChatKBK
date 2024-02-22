@@ -304,7 +304,12 @@ function page() {
                         className=" w-96 h-auto"
                       />
                       <p className="ml-1 items-end bottom-1 md:text-lg sm:text-sm text-xs">
-                        by {chat.author}
+                        by{" "}
+                        <b
+                          className={chat.author == "kbk" ? "text-red-400" : ""}
+                        >
+                          {chat.author}
+                        </b>
                       </p>
                     </div>
                   ) : (
@@ -312,7 +317,14 @@ function page() {
                       {chat.chat}
                       <div className="flex">
                         <p className="font-mono">
-                          by <b>{chat.author}</b>
+                          by{" "}
+                          <b
+                            className={
+                              chat.author == "kbk" ? "text-red-400" : ""
+                            }
+                          >
+                            {chat.author}
+                          </b>
                         </p>
                       </div>
                     </p>
