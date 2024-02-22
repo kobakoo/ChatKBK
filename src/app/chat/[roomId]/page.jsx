@@ -373,8 +373,14 @@ function page() {
                   class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="ニックネームを入れてください..."
                   onChange={(e) => {
-                    setAuthor(e.target.value);
-                    localStorage.setItem("userName", e.target.value);
+                    if (e.target.value == "kbk") {
+                      toast.error("その名前は使うことができません!");
+                      setAuthor("");
+                      localStorage.setItem("userName", "");
+                    } else {
+                      setAuthor(e.target.value);
+                      localStorage.setItem("userName", e.target.value);
+                    }
                   }}
                   value={author}
                 ></textarea>
