@@ -314,7 +314,7 @@ function page() {
                     </div>
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
-                      {chat.chat}
+                      <p className="whitespace-pre-wrap">{chat.chat}</p>
                       <div className="flex">
                         <p className="font-mono">
                           by{" "}
