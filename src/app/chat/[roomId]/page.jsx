@@ -27,11 +27,9 @@ import {
 } from "firebase/storage";
 import toast, { Toaster } from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import 'katex/dist/katex.min.css';
-
-
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -49,6 +47,7 @@ function page() {
   const [loading, setLoading] = useState(null);
   const [isUploded, setIsUploaded] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [browwser, setBrowser] = useState("");
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -144,6 +143,8 @@ function page() {
         // console.log(json);
         setIP(json);
       });
+    var userAgent = window.navigator.userAgent;
+    setBrowser(userAgent);
   }, []);
 
   const handleClick = () => {
@@ -211,6 +212,7 @@ function page() {
                       author: author,
                       type: "image",
                       ipInfo: IP,
+                      browser: browser,
                       // id: chat_id
                     }
                   );
@@ -364,7 +366,12 @@ function page() {
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
                       <p className="whitespace-pre-wrap" id="aChat">
-                        <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{chat.chat}</ReactMarkdown>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkMath]}
+                          rehypePlugins={[rehypeKatex]}
+                        >
+                          {chat.chat}
+                        </ReactMarkdown>
                       </p>
                       <div className="flex">
                         <p className="font-mono">
