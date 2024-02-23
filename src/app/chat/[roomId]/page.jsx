@@ -26,6 +26,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import toast, { Toaster } from "react-hot-toast";
+import ReactMarkdown from "react-markdown";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -107,9 +108,9 @@ function page() {
     setUp();
   });
 
-  useEffect(()=>{
-    console.log("enabled:"+enabled)
-  },[enabled])
+  useEffect(() => {
+    console.log("enabled:" + enabled);
+  }, [enabled]);
 
   useEffect(() => {
     const docRef = collection(db, "rooms", params.roomId, "chats");
@@ -327,7 +328,7 @@ function page() {
           <h1>{chats.name}</h1>
           <div className=" my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen">
             {chats.map((chat) => (
-              <div key={chat.id} className="my-2">
+              <div key={chat.id} className="my-2" id={chat.id - 999999999}>
                 <Link
                   href={`/chat/${params.roomId}#${chat.id - 999999999}`}
                   className=""
@@ -350,7 +351,9 @@ function page() {
                     </div>
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
-                      <p className="whitespace-pre-wrap">{chat.chat}</p>
+                      <p className="whitespace-pre-wrap" id="aChat">
+                        <ReactMarkdown>{chat.chat}</ReactMarkdown>
+                      </p>
                       <div className="flex">
                         <p className="font-mono">
                           by{" "}
