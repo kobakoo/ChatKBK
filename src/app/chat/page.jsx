@@ -55,6 +55,10 @@ function page() {
       });
   }, []);
 
+  setTimeout(function () {
+    location.reload();
+  }, 30 * 1000);
+
   return (
     //チャット一覧を表示
     <div className="md:m-20 sm:m-10 m-2">
@@ -113,7 +117,8 @@ function page() {
         </svg>
         <span class="sr-only">Info</span>
         <div>
-          <span class="font-medium">注意！</span> 現在一時的に部屋の作成機能を消しています。しばしお待ちください
+          <span class="font-medium">注意！</span>{" "}
+          現在一時的に部屋の作成機能を消しています。しばしお待ちください
         </div>
       </div>
       {/* <div
