@@ -27,6 +27,11 @@ import {
 } from "firebase/storage";
 import toast, { Toaster } from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
+
+
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -359,7 +364,7 @@ function page() {
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
                       <p className="whitespace-pre-wrap" id="aChat">
-                        <ReactMarkdown>{chat.chat}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{chat.chat}</ReactMarkdown>
                       </p>
                       <div className="flex">
                         <p className="font-mono">
