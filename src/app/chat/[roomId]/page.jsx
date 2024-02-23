@@ -43,6 +43,7 @@ function page() {
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [loading, setLoading] = useState(null);
   const [isUploded, setIsUploaded] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -103,6 +104,12 @@ function page() {
       setEnabled(false);
     }
   }
+
+  useEffect(() => {
+    if (localStorage.getItem("userName") == "kbk") {
+      setDisabled(false);
+    }
+  });
 
   useEffect(() => {
     setUp();
@@ -418,23 +425,44 @@ function page() {
                   ></textarea>
                 </div>
                 <p className="m-auto md:block hidden text-xl">by</p>
-                <textarea
-                  id="author"
-                  rows="1"
-                  class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="ニックネームを入れてください..."
-                  onChange={(e) => {
-                    if (e.target.value == "kbk") {
-                      toast.error("その名前は使うことができません!");
-                      setAuthor("");
-                      localStorage.setItem("userName", "");
-                    } else {
-                      setAuthor(e.target.value);
-                      localStorage.setItem("userName", e.target.value);
-                    }
-                  }}
-                  value={author}
-                ></textarea>
+                {disabled ? (
+                  <textarea
+                    id="author"
+                    rows="1"
+                    class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="ニックネームを入れてください..."
+                    onChange={(e) => {
+                      if (e.target.value == "kbk") {
+                        toast.error("その名前は使うことができません!");
+                        setAuthor("");
+                        localStorage.setItem("userName", "");
+                      } else {
+                        setAuthor(e.target.value);
+                        localStorage.setItem("userName", e.target.value);
+                      }
+                    }}
+                    value={author}
+                  ></textarea>
+                ) : (
+                  <textarea
+                    id="author"
+                    rows="1"
+                    class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="ニックネームを入れてください..."
+                    disabled
+                    onChange={(e) => {
+                      if (e.target.value == "kbk") {
+                        toast.error("その名前は使うことができません!");
+                        setAuthor("");
+                        localStorage.setItem("userName", "");
+                      } else {
+                        setAuthor(e.target.value);
+                        localStorage.setItem("userName", e.target.value);
+                      }
+                    }}
+                    value={author}
+                  ></textarea>
+                )}
               </div>
               <button
                 type="button"
