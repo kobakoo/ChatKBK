@@ -30,6 +30,7 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import 'animate.css';
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -47,7 +48,8 @@ function page() {
   const [loading, setLoading] = useState(null);
   const [isUploded, setIsUploaded] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [browwser, setBrowser] = useState("");
+  const [browser, setBrowser] = useState("");
+  const [exist, setExist] = useState(true);
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -123,17 +125,30 @@ function page() {
     console.log("enabled:" + enabled);
   }, [enabled]);
 
-  useEffect(() => {
-    const docRef = collection(db, "rooms", params.roomId, "chats");
-    const unsub = onSnapshot(docRef, (snapshot) => {
-      let results = [];
-      snapshot.docs.forEach((doc) => {
-        results.push({ ...doc.data(), id: doc.id });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  async function getData() {
+    const docRef = doc(db, "rooms", params.roomId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setExist(true);
+      const collectionRef = collection(db, "rooms", params.roomId, "chats");
+      const unsub = onSnapshot(collectionRef, (snapshot) => {
+        let results = [];
+        snapshot.docs.forEach((doc) => {
+          results.push({ ...doc.data(), id: doc.id });
+        });
+        setChats(results);
       });
-      setChats(results);
-    });
+    } else {
+      setExist(false);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+    // console.log(exist);
     //?¥ return () => unsub();
-  }, [params.roomId]);
+  }, [getData]);
 
   useEffect(() => {
     fetch("https://ipinfo.io?callback")
@@ -268,246 +283,317 @@ function page() {
           </a>
         </div>
       </nav>
-      {enabled ? (
+      {exist ? (
         <>
-          <title>
-            ChatKBK｜パスワード｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！
-          </title>
-          <section class="bg-gray-50 dark:bg-gray-900">
-            <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-              <Link
-                href="/"
-                class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-              >
-                <Image
-                  class="w-8 h-5 mr-2"
-                  src="https://kobakoo.com/logo.svg"
-                  alt="logo"
-                  width={150}
-                  height={100}
-                />
-                ChatKBK
-              </Link>
-              <p className="max-w-full w-96 mx-auto text-center mb-3">
-                パスワードを入力してください。パスワードを入力しても表示されている場合はパスワードが間違っている可能性があります。
-              </p>
-              <div class="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
-                <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                  パスワードフォーム
-                </h2>
-                <div class="mt-4 space-y-4 lg:mt-5 md:space-y-5">
-                  <div>
-                    <label
-                      for="password"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      パスワード
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      onChange={(event) => setUserPassword(event.target.value)}
+          {enabled ? (
+            <>
+              <title>
+                ChatKBK｜パスワード｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！
+              </title>
+              <section class="bg-gray-50 dark:bg-gray-900">
+                <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+                  <Link
+                    href="/"
+                    class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+                  >
+                    <Image
+                      class="w-8 h-5 mr-2"
+                      src="https://kobakoo.com/logo.svg"
+                      alt="logo"
+                      width={150}
+                      height={100}
                     />
+                    ChatKBK
+                  </Link>
+                  <p className="max-w-full w-96 mx-auto text-center mb-3">
+                    パスワードを入力してください。パスワードを入力しても表示されている場合はパスワードが間違っている可能性があります。
+                  </p>
+                  <div class="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+                    <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      パスワードフォーム
+                    </h2>
+                    <div class="mt-4 space-y-4 lg:mt-5 md:space-y-5">
+                      <div>
+                        <label
+                          for="password"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          パスワード
+                        </label>
+                        <input
+                          type="password"
+                          placeholder="••••••••"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          onChange={(event) =>
+                            setUserPassword(event.target.value)
+                          }
+                        />
+                      </div>
+                      {/* <div class="flex items-start">
+                          <div class="flex items-center h-5">
+                            <input id="newsletter" aria-describedby="newsletter" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="newsletter" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                          </div>
+                      </div> */}
+                      <button
+                        type="button"
+                        class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        onClick={handleClick}
+                      >
+                        Submit
+                      </button>
+                    </div>
                   </div>
-                  {/* <div class="flex items-start">
-                  <div class="flex items-center h-5">
-                    <input id="newsletter" aria-describedby="newsletter" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
+                </div>
+              </section>
+            </>
+          ) : (
+            <div>
+              <title>
+                ChatKBK｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！
+              </title>
+              <link
+                rel="canonical"
+                href={`https://chat.kobakoo.com/chat/${params.roomId}`}
+              />
+              <h1>{chats.name}</h1>
+              <div className=" my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen">
+                {chats.map((chat) => (
+                  <div key={chat.id} className="my-2" id={chat.id - 999999999}>
+                    <Link
+                      href={`/chat/${params.roomId}#${chat.id - 999999999}`}
+                      className=""
+                    >
+                      {chat.type ? (
+                        <div className="w-full p-3 bg-sky-100 sm:flex">
+                          <img
+                            src={chat.chat}
+                            alt={chat.chat}
+                            className=" w-96 h-auto"
+                          />
+                          <p className="ml-1 items-end bottom-1 md:text-lg sm:text-sm text-xs">
+                            by{" "}
+                            <b
+                              className={
+                                chat.author == "kbk" ? "text-red-400" : ""
+                              }
+                            >
+                              {chat.author}
+                            </b>
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
+                          <p
+                            className="whitespace-pre-wrap truncate"
+                            id="aChat"
+                          >
+                            <ReactMarkdown
+                              remarkPlugins={[remarkMath]}
+                              rehypePlugins={[rehypeKatex]}
+                            >
+                              {chat.chat}
+                            </ReactMarkdown>
+                          </p>
+                          <div className="flex">
+                            <p className="font-mono truncate">
+                              by{" "}
+                              <b
+                                className={
+                                  chat.author == "kbk"
+                                    ? "text-red-400 truncate"
+                                    : "truncate"
+                                }
+                              >
+                                {chat.author}
+                              </b>
+                            </p>
+                          </div>
+                        </p>
+                      )}
+                    </Link>
                   </div>
-                  <div class="ml-3 text-sm">
-                    <label for="newsletter" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                ))}
+              </div>
+
+              <form className="fixed bottom-0 max-w-screen w-screen">
+                {/* <label for="chat" class="sr-only">
+                      Your message
+                    </label> */}
+                <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 gap-x-1.5">
+                  {/* <button type="button" class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                            <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
+                            <span class="sr-only">Add emoji</span>
+                        </button> */}
+                  <div className="w-full md:flex">
+                    <div className="flex grow">
+                      <button
+                        type="button"
+                        class="pl-1 inline-flex justify-center p-4 text-blue-600 rounded-full cursor-pointer  dark:text-blue-500"
+                        variant="contained"
+                      >
+                        <label for="file_upload" className="cursor-pointer">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-5 h-5"
+                            viewBox="0 0 512 512"
+                            fill="currentColor"
+                          >
+                            <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                          </svg>
+                          <span class="sr-only">Add image</span>
+                          <input
+                            type="file"
+                            id="file_upload"
+                            accept="image/*"
+                            className=" hidden"
+                            onChange={onFileUploadToFirebase}
+                          />
+                        </label>
+                      </button>
+                      <textarea
+                        id="chat"
+                        rows="1"
+                        class="max-h-32 block p-2.5 w-full md:w-10/12 lg:w-full mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 md:mr-2"
+                        placeholder="メッセージを打ち込む..."
+                        onChange={(e) => setMessage(e.target.value)}
+                        value={message}
+                      ></textarea>
+                    </div>
+                    <p className="m-auto md:block hidden text-xl">by</p>
+                    {disabled ? (
+                      <textarea
+                        id="author"
+                        rows="1"
+                        class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="ニックネームを入れてください..."
+                        onChange={(e) => {
+                          if (e.target.value == "kbk") {
+                            toast.error("その名前は使うことができません!");
+                            setAuthor("");
+                            localStorage.setItem("userName", "");
+                          } else {
+                            setAuthor(e.target.value);
+                            localStorage.setItem("userName", e.target.value);
+                          }
+                        }}
+                        value={author}
+                      ></textarea>
+                    ) : (
+                      <textarea
+                        id="author"
+                        rows="1"
+                        class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="ニックネームを入れてください..."
+                        disabled
+                        onChange={(e) => {
+                          if (e.target.value == "kbk") {
+                            toast.error("その名前は使うことができません!");
+                            setAuthor("");
+                            localStorage.setItem("userName", "");
+                          } else {
+                            setAuthor(e.target.value);
+                            localStorage.setItem("userName", e.target.value);
+                          }
+                        }}
+                        value={author}
+                      ></textarea>
+                    )}
                   </div>
-              </div> */}
                   <button
                     type="button"
-                    class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                    onClick={handleClick}
+                    class="pl-1 inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+                    onClick={async () => {
+                      if (message === "") {
+                        alert("メッセージが入力されていません💦");
+                      } else {
+                        const chat_id = String(chats.length + 1000000000);
+                        setDoc(
+                          doc(db, "rooms", params.roomId, "chats", chat_id),
+                          {
+                            chat: message,
+                            author: author,
+                            ipInfo: IP,
+                            // id: chat_id
+                          }
+                        );
+                        setMessage("");
+                      }
+                    }}
                   >
-                    Submit
+                    <svg
+                      aria-hidden="true"
+                      class="w-6 h-6 rotate-90"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                    </svg>
+                    <span class="sr-only">Send message</span>
                   </button>
                 </div>
+              </form>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <section className="bg-white dark:bg-gray-900 ">
+            <div className="container min-h-screen px-6 py-12 mx-auto lg:flex lg:items-center lg:gap-12">
+              <div className="wf-ull lg:w-1/2">
+                <p className="text-sm font-medium text-blue-500 dark:text-blue-400">
+                  404 error
+                </p>
+                <h1 className="mt-3 text-2xl font-semibold text-gray-800 dark:text-white md:text-3xl">
+                  チャットが見つかりませんでした
+                </h1>
+                <p className="mt-4 text-gray-500 dark:text-gray-400">
+                  おっと！？チャットが見つからないようです！ホームに戻って再挑戦してください...
+                </p>
+                <div className="flex items-center mt-6 gap-x-3">
+                  <button
+                    className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700"
+                    onClick={() => router.push("/chat")}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5 rtl:rotate-180"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+                      />
+                    </svg>
+                    <span>戻る</span>
+                  </button>
+                  <button
+                    className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600"
+                    onClick={() => router.push("/")}
+                  >
+                    ホームへ
+                  </button>
+                </div>
+              </div>
+              <div className="relative w-full mt-12 lg:w-1/2 lg:mt-0 animate__backInDown animate__animated animate__bounce">
+                <Image
+                  className="w-full max-w-lg lg:mx-auto"
+                  src="https://merakiui.com/images/components/illustration.svg"
+                  alt="404"
+                  width={514}
+                  height={164}
+                />
               </div>
             </div>
           </section>
         </>
-      ) : (
-        <div>
-          <title>
-            ChatKBK｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！
-          </title>
-          <link
-            rel="canonical"
-            href={`https://chat.kobakoo.com/chat/${params.roomId}`}
-          />
-          <h1>{chats.name}</h1>
-          <div className=" my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen">
-            {chats.map((chat) => (
-              <div key={chat.id} className="my-2" id={chat.id - 999999999}>
-                <Link
-                  href={`/chat/${params.roomId}#${chat.id - 999999999}`}
-                  className=""
-                >
-                  {chat.type ? (
-                    <div className="w-full p-3 bg-sky-100 sm:flex">
-                      <img
-                        src={chat.chat}
-                        alt={chat.chat}
-                        className=" w-96 h-auto"
-                      />
-                      <p className="ml-1 items-end bottom-1 md:text-lg sm:text-sm text-xs">
-                        by{" "}
-                        <b
-                          className={chat.author == "kbk" ? "text-red-400" : ""}
-                        >
-                          {chat.author}
-                        </b>
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
-                      <p className="whitespace-pre-wrap truncate" id="aChat">
-                        <ReactMarkdown
-                          remarkPlugins={[remarkMath]}
-                          rehypePlugins={[rehypeKatex]}
-                        >
-                          {chat.chat}
-                        </ReactMarkdown>
-                      </p>
-                      <div className="flex">
-                        <p className="font-mono truncate">
-                          by{" "}
-                          <b
-                            className={
-                              chat.author == "kbk" ? "text-red-400 truncate" : "truncate"
-                            }
-                          >
-                            {chat.author}
-                          </b>
-                        </p>
-                      </div>
-                    </p>
-                  )}
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          <form className="fixed bottom-0 max-w-screen w-screen">
-            {/* <label for="chat" class="sr-only">
-              Your message
-            </label> */}
-            <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 gap-x-1.5">
-              {/* <button type="button" class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                    <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
-                    <span class="sr-only">Add emoji</span>
-                </button> */}
-              <div className="w-full md:flex">
-                <div className="flex grow">
-                  <button
-                    type="button"
-                    class="pl-1 inline-flex justify-center p-4 text-blue-600 rounded-full cursor-pointer  dark:text-blue-500"
-                    variant="contained"
-                  >
-                    <label for="file_upload" className="cursor-pointer">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5"
-                        viewBox="0 0 512 512"
-                        fill="currentColor"
-                      >
-                        <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                      </svg>
-                      <span class="sr-only">Add image</span>
-                      <input
-                        type="file"
-                        id="file_upload"
-                        accept="image/*"
-                        className=" hidden"
-                        onChange={onFileUploadToFirebase}
-                      />
-                    </label>
-                  </button>
-                  <textarea
-                    id="chat"
-                    rows="1"
-                    class="max-h-32 block p-2.5 w-full md:w-10/12 lg:w-full mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 md:mr-2"
-                    placeholder="メッセージを打ち込む..."
-                    onChange={(e) => setMessage(e.target.value)}
-                    value={message}
-                  ></textarea>
-                </div>
-                <p className="m-auto md:block hidden text-xl">by</p>
-                {disabled ? (
-                  <textarea
-                    id="author"
-                    rows="1"
-                    class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="ニックネームを入れてください..."
-                    onChange={(e) => {
-                      if (e.target.value == "kbk") {
-                        toast.error("その名前は使うことができません!");
-                        setAuthor("");
-                        localStorage.setItem("userName", "");
-                      } else {
-                        setAuthor(e.target.value);
-                        localStorage.setItem("userName", e.target.value);
-                      }
-                    }}
-                    value={author}
-                  ></textarea>
-                ) : (
-                  <textarea
-                    id="author"
-                    rows="1"
-                    class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="ニックネームを入れてください..."
-                    disabled
-                    onChange={(e) => {
-                      if (e.target.value == "kbk") {
-                        toast.error("その名前は使うことができません!");
-                        setAuthor("");
-                        localStorage.setItem("userName", "");
-                      } else {
-                        setAuthor(e.target.value);
-                        localStorage.setItem("userName", e.target.value);
-                      }
-                    }}
-                    value={author}
-                  ></textarea>
-                )}
-              </div>
-              <button
-                type="button"
-                class="pl-1 inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
-                onClick={async () => {
-                  if (message === "") {
-                    alert("メッセージが入力されていません💦");
-                  } else {
-                    const chat_id = String(chats.length + 1000000000);
-                    setDoc(doc(db, "rooms", params.roomId, "chats", chat_id), {
-                      chat: message,
-                      author: author,
-                      ipInfo: IP,
-                      // id: chat_id
-                    });
-                    setMessage("");
-                  }
-                }}
-              >
-                <svg
-                  aria-hidden="true"
-                  class="w-6 h-6 rotate-90"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                </svg>
-                <span class="sr-only">Send message</span>
-              </button>
-            </div>
-          </form>
-        </div>
       )}
     </>
   );

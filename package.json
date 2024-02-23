@@ -14,6 +14,7 @@
     "@invertase/image-processing-api": "^0.1.0",
     "@netlify/plugin-nextjs": "^4.37.1",
     "@next/third-parties": "^14.1.0",
+    "animate.css": "^4.1.1",
     "clipboard": "^2.0.11",
     "emoji-picker-react": "^4.4.9",
     "encoding": "^0.1.13",
