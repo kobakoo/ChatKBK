@@ -37,6 +37,8 @@ function page() {
   const [author, setAuthor] = useState(
     typeof window !== "undefined" ? localStorage.getItem("userName") : ""
   );
+  const [IP, setIP] = useState({});
+
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [loading, setLoading] = useState(null);
   const [isUploded, setIsUploaded] = useState(false);
@@ -98,6 +100,16 @@ function page() {
     });
     // return () => unsub();
   }, [params.roomId]);
+
+  useEffect(() => {
+    fetch("https://ipinfo.io?callback")
+      .then((res) => res.json())
+      .then((json) => {
+        // console.log(json.ip);
+        // console.log(json);
+        setIP(json);
+      });
+  }, []);
 
   const handleClick = () => {
     router.push(`/chat/${params.roomId}?pass=${userPassword}`);
@@ -162,6 +174,7 @@ function page() {
                       chat: downloadURL,
                       author: author,
                       type: "image",
+                      ipInfo: IP,
                       // id: chat_id
                     }
                   );
@@ -408,6 +421,7 @@ function page() {
                     setDoc(doc(db, "rooms", params.roomId, "chats", chat_id), {
                       chat: message,
                       author: author,
+                      ipInfo: IP,
                       // id: chat_id
                     });
                     setMessage("");

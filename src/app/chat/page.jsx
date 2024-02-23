@@ -24,6 +24,7 @@ function page() {
   const [enabled, setEnabled] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [IP, setIP] = useState({});
 
   function closeModal() {
     setIsOpen(false);
@@ -44,6 +45,14 @@ function page() {
       setDocuments(results);
     });
     return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    fetch("https://ipinfo.io?callback")
+      .then((res) => res.json())
+      .then((json) => {
+        setIP(json);
+      });
   }, []);
 
   return (
