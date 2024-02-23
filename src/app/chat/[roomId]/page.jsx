@@ -54,40 +54,62 @@ function page() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const getPass = searchParams.get("pass");
   // const pass = searchParams.get('pass');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  async function startUp() {
+  // async function startUp() {
+  //   const docRef = doc(db, "rooms", params.roomId);
+  //   const docSnap = await getDoc(docRef);
+  //   // console.log(docSnap.data());
+  //   if (docSnap.get("enabled") === true) {
+  //     setEnabled(docSnap.get("enabled"));
+  //     setPassword(docSnap.get("password"));
+  //     setPass(searchParams.get("pass"));
+  //   } else {
+  //     setEnabled(false);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   startUp();
+  // });
+
+  // setTimeout(() => {setPass(searchParams.get("pass"))}, 1000);
+
+  // useEffect(() => {
+  //   if (password === pass) {
+  //     setEnabled(false);
+  //   } else {
+  //     setEnabled(true);
+  //   }
+  // }, [pass, password]);
+
+  async function setUp() {
     const docRef = doc(db, "rooms", params.roomId);
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
     if (docSnap.get("enabled") === true) {
       setEnabled(docSnap.get("enabled"));
+      setPassword(docSnap.get("password"));
+      setPass(searchParams.get("pass"));
+      if (docSnap.get("password") == searchParams.get("pass")) {
+        setEnabled(false);
+      }
+      // console.log(docSnap.get("enabled"));
+      // console.log(docSnap.get("password"));
+      // console.log(searchParams.get("pass"));
     } else {
       setEnabled(false);
-    }
-    if (docSnap.get("enabled") === true) {
-      setPassword(docSnap.get("password"));
     }
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    startUp();
-  }, [startUp]);
+    setUp();
+  });
 
-  useEffect(() => {
-    setPass(getPass);
-  }, [getPass]);
-
-  useEffect(() => {
-    if (password === pass) {
-      setEnabled(false);
-    } else {
-      setEnabled(true);
-    }
-  }, [pass, password]);
+  useEffect(()=>{
+    console.log("enabled:"+enabled)
+  },[enabled])
 
   useEffect(() => {
     const docRef = collection(db, "rooms", params.roomId, "chats");
@@ -98,7 +120,7 @@ function page() {
       });
       setChats(results);
     });
-    // return () => unsub();
+    //?¥ return () => unsub();
   }, [params.roomId]);
 
   useEffect(() => {
@@ -113,6 +135,7 @@ function page() {
 
   const handleClick = () => {
     router.push(`/chat/${params.roomId}?pass=${userPassword}`);
+    setPass(userPassword);
   };
 
   // history.pushState(null, null, location.href);
