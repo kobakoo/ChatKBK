@@ -365,7 +365,7 @@ function page() {
                     </div>
                   ) : (
                     <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
-                      <p className="whitespace-pre-wrap" id="aChat">
+                      <p className="whitespace-pre-wrap truncate" id="aChat">
                         <ReactMarkdown
                           remarkPlugins={[remarkMath]}
                           rehypePlugins={[rehypeKatex]}
@@ -374,11 +374,11 @@ function page() {
                         </ReactMarkdown>
                       </p>
                       <div className="flex">
-                        <p className="font-mono">
+                        <p className="font-mono truncate">
                           by{" "}
                           <b
                             className={
-                              chat.author == "kbk" ? "text-red-400" : ""
+                              chat.author == "kbk" ? "text-red-400 truncate" : "truncate"
                             }
                           >
                             {chat.author}
