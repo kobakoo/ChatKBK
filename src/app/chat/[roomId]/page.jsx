@@ -30,7 +30,7 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import 'animate.css';
+import "animate.css";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -398,13 +398,13 @@ function page() {
                             </ReactMarkdown>
                           </p>
                           <div className="flex">
-                            <p className="font-mono truncate">
+                            <p className="font-mono">
                               by{" "}
                               <b
                                 className={
                                   chat.author == "kbk"
-                                    ? "text-red-400 truncate"
-                                    : "truncate"
+                                    ? "text-red-400"
+                                    : ""
                                 }
                               >
                                 {chat.author}
