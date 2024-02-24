@@ -10,6 +10,7 @@ import {
   setDoc,
   onSnapshot,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/FirebaseConfig";
 import { useRouter } from "next/navigation";
@@ -31,6 +32,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import "animate.css";
+// import { db } from "@/lib/FirebaseConfig";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -50,6 +52,7 @@ function page() {
   const [disabled, setDisabled] = useState(true);
   const [browser, setBrowser] = useState("");
   const [exist, setExist] = useState(true);
+  const [createdBy, setCreatedBy] = useState("");
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -100,6 +103,9 @@ function page() {
       setEnabled(docSnap.get("enabled"));
       setPassword(docSnap.get("password"));
       setPass(searchParams.get("pass"));
+      setCreatedBy(docSnap.get("createdBy"));
+      console.log("created by: " + docSnap.get("createdBy"));
+      console.log("IP:" + IP.ip);
       if (docSnap.get("password") == searchParams.get("pass")) {
         setEnabled(false);
       }
@@ -147,7 +153,7 @@ function page() {
   useEffect(() => {
     getData();
     // console.log(exist);
-    //?¥ return () => unsub();
+    //? return () => unsub();
   }, [getData]);
 
   useEffect(() => {
@@ -248,20 +254,42 @@ function page() {
   return (
     <>
       <Toaster />
-      <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 fixed top-0 w-full">
-        <div class="flex flex-wrap items-center justify-between p-4 w-screen">
-          <a href="/" class="flex items-center">
+      <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 fixed top-0 w-full">
+        <div className="flex flex-wrap items-center justify-between p-4 w-screen">
+          <a href="/" className="flex items-center">
             <Image
               src="https://kobakoo.com/logo.svg"
-              class="h-8 w-auto mr-3"
+              className="h-8 w-auto mr-3"
               alt="kbk logo"
               width={150}
               height={100}
             />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               ChatKBK
             </span>
           </a>
+          {createdBy == IP.ip ? (
+            <button
+              onClick={async () => {
+                if (window.confirm("本当に部屋を削除しますか?")) {
+                  await deleteDoc(doc(db, "rooms", params.roomId));
+                  router.push("/chat");
+                }
+              }}
+              className="p-2 hover:bg-slate-200 rounded-md transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height={24}
+                viewBox="0 -960 960 960"
+                width={24}
+              >
+                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+              </svg>
+            </button>
+          ) : (
+            <></>
+          )}
           <a
             href="/chat"
             className="p-2 hover:bg-slate-200 rounded-md transition"
@@ -272,7 +300,7 @@ function page() {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-6 h-6"
+              className="w-6 h-6"
             >
               <path
                 stroke-linecap="round"
@@ -290,14 +318,14 @@ function page() {
               <title>
                 ChatKBK｜パスワード｜登録不要で今すぐ始められるSNS！規制に引っかからずに使えます！
               </title>
-              <section class="bg-gray-50 dark:bg-gray-900">
-                <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+              <section className="bg-gray-50 dark:bg-gray-900">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                   <Link
                     href="/"
-                    class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
                   >
                     <Image
-                      class="w-8 h-5 mr-2"
+                      className="w-8 h-5 mr-2"
                       src="https://kobakoo.com/logo.svg"
                       alt="logo"
                       width={150}
@@ -308,38 +336,38 @@ function page() {
                   <p className="max-w-full w-96 mx-auto text-center mb-3">
                     パスワードを入力してください。パスワードを入力しても表示されている場合はパスワードが間違っている可能性があります。
                   </p>
-                  <div class="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
-                    <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                  <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+                    <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                       パスワードフォーム
                     </h2>
-                    <div class="mt-4 space-y-4 lg:mt-5 md:space-y-5">
+                    <div className="mt-4 space-y-4 lg:mt-5 md:space-y-5">
                       <div>
                         <label
-                          for="password"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          htmlFor="password"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           パスワード
                         </label>
                         <input
                           type="password"
                           placeholder="••••••••"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           onChange={(event) =>
                             setUserPassword(event.target.value)
                           }
                         />
                       </div>
-                      {/* <div class="flex items-start">
-                          <div class="flex items-center h-5">
-                            <input id="newsletter" aria-describedby="newsletter" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
+                      {/* <div className="flex items-start">
+                          <div className="flex items-center h-5">
+                            <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
                           </div>
-                          <div class="ml-3 text-sm">
-                            <label for="newsletter" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                          <div className="ml-3 text-sm">
+                            <label htmlFor="newsletter" className="font-light text-gray-500 dark:text-gray-300">I accept the <a className="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
                           </div>
                       </div> */}
                       <button
                         type="button"
-                        class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                         onClick={handleClick}
                       >
                         Submit
@@ -402,9 +430,7 @@ function page() {
                               by{" "}
                               <b
                                 className={
-                                  chat.author == "kbk"
-                                    ? "text-red-400"
-                                    : ""
+                                  chat.author == "kbk" ? "text-red-400" : ""
                                 }
                               >
                                 {chat.author}
@@ -419,22 +445,22 @@ function page() {
               </div>
 
               <form className="fixed bottom-0 max-w-screen w-screen">
-                {/* <label for="chat" class="sr-only">
+                {/* <label htmlFor="chat" className="sr-only">
                       Your message
                     </label> */}
-                <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 gap-x-1.5">
-                  {/* <button type="button" class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                            <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
-                            <span class="sr-only">Add emoji</span>
+                <div className="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 gap-x-1.5">
+                  {/* <button type="button" className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                            <svg aria-hidden="true" className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
+                            <span className="sr-only">Add emoji</span>
                         </button> */}
                   <div className="w-full md:flex">
                     <div className="flex grow">
                       <button
                         type="button"
-                        class="pl-1 inline-flex justify-center p-4 text-blue-600 rounded-full cursor-pointer  dark:text-blue-500"
+                        className="pl-1 inline-flex justify-center p-4 text-blue-600 rounded-full cursor-pointer  dark:text-blue-500"
                         variant="contained"
                       >
-                        <label for="file_upload" className="cursor-pointer">
+                        <label htmlFor="file_upload" className="cursor-pointer">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-5 h-5"
@@ -443,7 +469,7 @@ function page() {
                           >
                             <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
                           </svg>
-                          <span class="sr-only">Add image</span>
+                          <span className="sr-only">Add image</span>
                           <input
                             type="file"
                             id="file_upload"
@@ -456,7 +482,7 @@ function page() {
                       <textarea
                         id="chat"
                         rows="1"
-                        class="max-h-32 block p-2.5 w-full md:w-10/12 lg:w-full mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 md:mr-2"
+                        className="max-h-32 block p-2.5 w-full md:w-10/12 lg:w-full mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 md:mr-2"
                         placeholder="メッセージを打ち込む..."
                         onChange={(e) => setMessage(e.target.value)}
                         value={message}
@@ -467,7 +493,7 @@ function page() {
                       <textarea
                         id="author"
                         rows="1"
-                        class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="ニックネームを入れてください..."
                         onChange={(e) => {
                           if (e.target.value == "kbk") {
@@ -485,7 +511,7 @@ function page() {
                       <textarea
                         id="author"
                         rows="1"
-                        class="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="max-h-32 block p-2.5 mx-auto text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="ニックネームを入れてください..."
                         disabled
                         onChange={(e) => {
@@ -504,7 +530,7 @@ function page() {
                   </div>
                   <button
                     type="button"
-                    class="pl-1 inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+                    className="pl-1 inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
                     onClick={async () => {
                       if (message === "") {
                         alert("メッセージが入力されていません💦");
@@ -525,14 +551,14 @@ function page() {
                   >
                     <svg
                       aria-hidden="true"
-                      class="w-6 h-6 rotate-90"
+                      className="w-6 h-6 rotate-90"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                     </svg>
-                    <span class="sr-only">Send message</span>
+                    <span className="sr-only">Send message</span>
                   </button>
                 </div>
               </form>
