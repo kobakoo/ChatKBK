@@ -83,7 +83,7 @@ function page() {
         </div>
       </nav>
 
-      {/* <div
+      <div
         className="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 mt-4"
         role="alert"
       >
@@ -101,8 +101,8 @@ function page() {
           <span className="font-bold">部屋の作成が行えるようになりました!</span>{" "}
           少し変更して、もう一度投稿してみてください。
         </div>
-      </div> */}
-      <div
+      </div>
+      {/* <div
         class="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 mt-5"
         role="alert"
       >
@@ -120,7 +120,7 @@ function page() {
           <span class="font-medium">注意！</span>{" "}
           現在一時的に部屋の作成機能を消しています。しばしお待ちください
         </div>
-      </div>
+      </div> */}
       {/* <div
         class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
         role="alert"
