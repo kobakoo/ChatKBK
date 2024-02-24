@@ -55,9 +55,9 @@ function page() {
       });
   }, []);
 
-  setTimeout(function () {
-    location.reload();
-  }, 30 * 1000);
+  // setTimeout(function () {
+  //   location.reload();
+  // }, 30 * 1000);
 
   return (
     //チャット一覧を表示
