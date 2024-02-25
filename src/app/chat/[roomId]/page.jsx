@@ -550,6 +550,7 @@ function page() {
                             chat: message,
                             author: author,
                             ipInfo: IP,
+                            Browser: browser,
                             // id: chat_id
                           }
                         );
