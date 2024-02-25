@@ -95,17 +95,24 @@ function page() {
   //   }
   // }, [pass, password]);
 
+  // useEffect(() => {
+  //   console.log("created by:" + createdBy);
+  // }, [createdBy]);
+
+  // useEffect(() => {
+  //   console.log("IP:" + IP.ip);
+  // }, [IP.ip]);
+
   async function setUp() {
     const docRef = doc(db, "rooms", params.roomId);
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
+    setCreatedBy(docSnap.get("createdBy"));
     if (docSnap.get("enabled") === true) {
       setEnabled(docSnap.get("enabled"));
       setPassword(docSnap.get("password"));
       setPass(searchParams.get("pass"));
-      setCreatedBy(docSnap.get("createdBy"));
-      console.log("created by: " + docSnap.get("createdBy"));
-      console.log("IP:" + IP.ip);
+      // console.log("IP:" + IP.ip);
       if (docSnap.get("password") == searchParams.get("pass")) {
         setEnabled(false);
       }
@@ -115,6 +122,7 @@ function page() {
     } else {
       setEnabled(false);
     }
+    // console.log("created by: " + docSnap.get("createdBy"));
   }
 
   useEffect(() => {
