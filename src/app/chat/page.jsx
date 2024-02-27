@@ -70,10 +70,14 @@ function page() {
   //   location.reload();
   // }, 30 * 1000);
 
+  const [baseURL, setBaseURL] = useState("https://chat.kobakoo.com");
+  useEffect(() => {
+    var url = new URL(window.location.href);
+    setBaseURL(url.protocol + "//" + url.hostname);
+  }, []);
+
   async function copyToClipboard() {
-    await global.navigator.clipboard.writeText(
-      "https://chat.kobakoo.com/chat/" + createdId
-    );
+    await global.navigator.clipboard.writeText(baseURL + "/chat/" + createdId);
     alert("コピーされました！");
   }
 
@@ -524,11 +528,11 @@ function page() {
                     </p>
                     <div className="p-3 w-full bg-slate-100 border-slate-600/80 border-2 rounded-md flex justify-between mt-2">
                       <a
-                        href={"https://chat.kobakoo.com/chat/" + createdId}
+                        href={baseURL + "/chat/" + createdId}
                         target="_blank"
                         className="overflow-clip truncate"
                       >
-                        {"https://chat.kobakoo.com/chat/" + createdId}
+                        {baseURL + "/chat/" + createdId}
                       </a>
                       <button
                         className="w-3 h-3 mr-2"
@@ -554,9 +558,7 @@ function page() {
                       </button>
                     </div>
                     <div className=" mx-auto mt-3">
-                      <QRCode
-                        url={"https://chat.kobakoo.com/chat/" + createdId}
-                      />
+                      <QRCode url={baseURL + "/chat/" + createdId} />
                     </div>
                   </div>
 

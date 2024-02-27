@@ -259,6 +259,13 @@ function page() {
       }
     }
   };
+
+  const [baseURL, setBaseURL] = useState("https://chat.kobakoo.com");
+  useEffect(() => {
+    var url = new URL(window.location.href);
+    setBaseURL(url.protocol + "//" + url.hostname);
+  }, []);
+
   return (
     <>
       <Toaster />
