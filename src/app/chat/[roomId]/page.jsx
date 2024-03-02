@@ -13,6 +13,7 @@ import {
   deleteDoc,
   orderBy,
   limit,
+  query,
 } from "firebase/firestore";
 import { db } from "@/lib/FirebaseConfig";
 import { useRouter } from "next/navigation";
@@ -148,19 +149,14 @@ function page() {
     if (docSnap.exists()) {
       setExist(true);
       const collectionRef = collection(db, "rooms", params.roomId, "chats");
-
-      const unsub = onSnapshot(
-        collectionRef,
-        orderBy("createdAt", "desc"),
-        limit(150),
-        (snapshot) => {
-          let results = [];
-          snapshot.docs.forEach((doc) => {
-            results.push({ ...doc.data(), id: doc.id });
-          });
-          setChats(results);
-        }
-      );
+      const q = query(collectionRef, orderBy("sentAt"), limit(150));
+      const unsub = onSnapshot(q, (snapshot) => {
+        let results = [];
+        snapshot.docs.forEach((doc) => {
+          results.push({ ...doc.data(), id: doc.id });
+        });
+        setChats(results);
+      });
     } else {
       setExist(false);
     }
