@@ -11,6 +11,8 @@ import {
   onSnapshot,
   getDoc,
   deleteDoc,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { db } from "@/lib/FirebaseConfig";
 import { useRouter } from "next/navigation";
@@ -146,13 +148,19 @@ function page() {
     if (docSnap.exists()) {
       setExist(true);
       const collectionRef = collection(db, "rooms", params.roomId, "chats");
-      const unsub = onSnapshot(collectionRef, (snapshot) => {
-        let results = [];
-        snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
-        });
-        setChats(results);
-      });
+
+      const unsub = onSnapshot(
+        collectionRef,
+        orderBy("createdAt", "desc"),
+        limit(150),
+        (snapshot) => {
+          let results = [];
+          snapshot.docs.forEach((doc) => {
+            results.push({ ...doc.data(), id: doc.id });
+          });
+          setChats(results);
+        }
+      );
     } else {
       setExist(false);
     }
@@ -516,8 +524,12 @@ function page() {
                             setAuthor("");
                             localStorage.setItem("userName", "");
                           } else {
-                            setAuthor(e.target.value);
-                            localStorage.setItem("userName", e.target.value);
+                            if (e.target.value.length > 20) {
+                              toast.error("名前が長すぎます!");
+                            } else {
+                              setAuthor(e.target.value);
+                              localStorage.setItem("userName", e.target.value);
+                            }
                           }
                         }}
                         value={author}
@@ -553,14 +565,14 @@ function page() {
                         if (message.length > 100) {
                           alert("メッセージが長すぎます!");
                         } else {
-                          const chat_id = String(chats.length + 1000000000);
-                          setDoc(
-                            doc(db, "rooms", params.roomId, "chats", chat_id),
+                          addDoc(
+                            collection(db, "rooms", params.roomId, "chats"),
                             {
                               chat: message,
                               author: author,
                               ipInfo: IP,
                               Browser: browser,
+                              sentAt: new Date(),
                               // id: chat_id
                             }
                           );
