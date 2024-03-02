@@ -550,18 +550,22 @@ function page() {
                       if (message === "") {
                         alert("メッセージが入力されていません💦");
                       } else {
-                        const chat_id = String(chats.length + 1000000000);
-                        setDoc(
-                          doc(db, "rooms", params.roomId, "chats", chat_id),
-                          {
-                            chat: message,
-                            author: author,
-                            ipInfo: IP,
-                            Browser: browser,
-                            // id: chat_id
-                          }
-                        );
-                        setMessage("");
+                        if (message.length > 100) {
+                          alert("メッセージが長すぎます!");
+                        } else {
+                          const chat_id = String(chats.length + 1000000000);
+                          setDoc(
+                            doc(db, "rooms", params.roomId, "chats", chat_id),
+                            {
+                              chat: message,
+                              author: author,
+                              ipInfo: IP,
+                              Browser: browser,
+                              // id: chat_id
+                            }
+                          );
+                          setMessage("");
+                        }
                       }
                     }}
                   >
