@@ -237,15 +237,15 @@ function page() {
               getDownloadURL(uploadImage.snapshot.ref).then(
                 async (downloadURL) => {
                   console.log("File available at", downloadURL);
-                  const chat_id = String(chats.length + 1000000000);
-                  await setDoc(
-                    doc(db, "rooms", params.roomId, "chats", chat_id),
+                  await addDoc(
+                    collection(db, "rooms", params.roomId, "chats"),
                     {
                       chat: downloadURL,
                       author: author,
                       type: "image",
                       ipInfo: IP,
                       browser: browser,
+                      sentAt: new Date(),
                       // id: chat_id
                     }
                   );
@@ -408,9 +408,9 @@ function page() {
               <h1>{chats.name}</h1>
               <div className=" my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen">
                 {chats.map((chat) => (
-                  <div key={chat.id} className="my-2" id={chat.id - 999999999}>
+                  <div key={chat.id} className="my-2" id={chat.id}>
                     <Link
-                      href={`/chat/${params.roomId}#${chat.id - 999999999}`}
+                      href={`/chat/${params.roomId}#${chat.id}`}
                       className=""
                     >
                       {chat.type ? (
