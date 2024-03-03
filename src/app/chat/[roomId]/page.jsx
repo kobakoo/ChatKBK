@@ -35,6 +35,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import "animate.css";
+import Marquee from "react-fast-marquee";
 // import { db } from "@/lib/FirebaseConfig";
 
 function page() {
@@ -56,6 +57,7 @@ function page() {
   const [browser, setBrowser] = useState("");
   const [exist, setExist] = useState(true);
   const [createdBy, setCreatedBy] = useState("");
+  const [createdByUserName, setCreatedByUserName] = useState("");
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -111,6 +113,7 @@ function page() {
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
     setCreatedBy(docSnap.get("createdBy"));
+    setCreatedByUserName(docSnap.get("createdByUserName"));
     if (docSnap.get("enabled") === true) {
       setEnabled(docSnap.get("enabled"));
       setPassword(docSnap.get("password"));
@@ -132,7 +135,7 @@ function page() {
     if (localStorage.getItem("userName") == "kbk") {
       setDisabled(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     setUp();
@@ -273,7 +276,28 @@ function page() {
   return (
     <>
       <Toaster />
-      <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 fixed top-0 w-full">
+      {exist ? (
+        <div className="fixed top-0 z-10">
+          {enabled ? (
+            <></>
+          ) : (
+            <Marquee
+              pauseOnHover={false}
+              speed={50}
+              autoFill={true}
+              // autoFill={true}
+              className="bg-gray-50 dark:bg-gray-800 text-zinc-700" //クラスをつけることができます
+            >
+              <Link href={`/chat/${params.roomId}`} className=" mx-4">
+                この部屋は <b>{createdByUserName}</b> によって作成されました
+              </Link>
+            </Marquee>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
+      <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 fixed top-0 w-full mt-1">
         <div className="flex flex-wrap items-center justify-between p-4 w-screen">
           <a href="/" className="flex items-center">
             <Image

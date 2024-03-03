@@ -30,6 +30,7 @@ function page() {
   const [showDeletable, setShowDeletable] = useState(false);
   let [isOpenDesc, setIsOpenDesc] = useState(false);
   const [createdId, setCreatedId] = useState("");
+  const [userName, setUserName] = useState("");
 
   function closeModal() {
     setIsOpen(false);
@@ -39,6 +40,10 @@ function page() {
     setIsOpen(true);
     setName("");
   }
+
+  useEffect(() => {
+    setUserName(localStorage.getItem("userName"));
+  }, []);
 
   useEffect(() => {
     if (showPublish == false) {
@@ -459,6 +464,7 @@ function page() {
                                 enabled: enabled,
                                 published: showPublish,
                                 createdBy: IP.ip,
+                                createdByUserName: userName,
                               }
                             );
                             closeModal();
