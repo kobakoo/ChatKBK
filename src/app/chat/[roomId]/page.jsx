@@ -152,13 +152,13 @@ function page() {
     if (docSnap.exists()) {
       setExist(true);
       const collectionRef = collection(db, "rooms", params.roomId, "chats");
-      const q = query(collectionRef, orderBy("sentAt"), limit(150));
+      const q = query(collectionRef, orderBy("sentAt", "desc"), limit(200));
       const unsub = onSnapshot(q, (snapshot) => {
         let results = [];
         snapshot.docs.forEach((doc) => {
           results.push({ ...doc.data(), id: doc.id });
         });
-        setChats(results);
+        setChats(results.reverse());
       });
     } else {
       setExist(false);
