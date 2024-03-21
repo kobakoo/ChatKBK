@@ -71,6 +71,37 @@ function page() {
       });
   }, []);
 
+  async function temporallyRegister() {
+    const collectionRef = collection(db, "users");
+    const snapshot = await getCountFromServer(collectionRef);
+    var S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var N = 3;
+    const count =
+      snapshot.data().count +
+      1 +
+      Array.from(crypto.getRandomValues(new Uint8Array(N)))
+        .map((n) => S[n % S.length])
+        .join("");
+    const docRef = doc(db, "users", IP.ip);
+    const docSnap = getDoc(docRef);
+
+    if (docSnap.exists) {
+      console.log("You already have a doc with this name!");
+    } else {
+      if (IP.ip == null) {
+        console.error("広告ブロッカーなどのトラッカー防止をオフにしてください");
+      } else {
+        await setDoc(doc(db, "users", IP.ip), {
+          id: String(count),
+        });
+      }
+    }
+  }
+
+  useEffect(() => {
+    temporallyRegister();
+  }, [IP]);
+
   // setTimeout(function () {
   //   location.reload();
   // }, 30 * 1000);
