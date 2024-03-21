@@ -87,7 +87,7 @@ function page() {
           .map((n) => S[n % S.length])
           .join("");
       const docRef = doc(db, "users", IP.ip);
-      const docSnap = getDoc(docRef);
+      const docSnap = await getDoc(docRef);
       if (docSnap.exists) {
         console.log("You already have a doc with this name!");
       } else {
