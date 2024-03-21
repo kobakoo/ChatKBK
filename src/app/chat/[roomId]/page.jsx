@@ -14,6 +14,7 @@ import {
   orderBy,
   limit,
   query,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db } from "@/lib/FirebaseConfig";
 import { useRouter } from "next/navigation";
@@ -58,6 +59,9 @@ function page() {
   const [exist, setExist] = useState(true);
   const [createdBy, setCreatedBy] = useState("");
   const [createdByUserName, setCreatedByUserName] = useState("");
+  const [clientUserId, setClientUserId] = useState(
+    typeof window !== "undefined" ? localStorage.getItem("id") : ""
+  );
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -166,6 +170,10 @@ function page() {
   }
 
   useEffect(() => {
+    console.log(clientUserId);
+  }, [clientUserId]);
+
+  useEffect(() => {
     getData();
     // console.log(exist);
     //? return () => unsub();
@@ -187,6 +195,44 @@ function page() {
     router.push(`/chat/${params.roomId}?pass=${userPassword}`);
     setPass(userPassword);
   };
+
+  async function temporallyRegister() {
+    if (IP.ip) {
+      const collectionRef = collection(db, "users");
+      const snapshot = await getCountFromServer(collectionRef);
+      var S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      var N = 3;
+      const count =
+        snapshot.data().count +
+        1 +
+        Array.from(crypto.getRandomValues(new Uint8Array(N)))
+          .map((n) => S[n % S.length])
+          .join("");
+      const docRef = doc(db, "users", IP.ip);
+      const docSnap = getDoc(docRef);
+
+      if (docSnap.exists) {
+        console.log("You already have a doc with this name!");
+      } else {
+        if (IP.ip == null) {
+          console.error(
+            "広告ブロッカーなどのトラッカー防止をオフにしてください"
+          );
+        } else {
+          await setDoc(doc(db, "users", IP.ip), {
+            id: String(count),
+          });
+          localStorage.setItem("id", String(count));
+          setClientUserId(String(count));
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    temporallyRegister();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [IP]);
 
   // history.pushState(null, null, location.href);
   // window.addEventListener("popstate", (e) => {
@@ -272,41 +318,6 @@ function page() {
     var url = new URL(window.location.href);
     setBaseURL(url.protocol + "//" + url.hostname);
   }, []);
-
-  async function temporallyRegister() {
-    if (IP.ip) {
-      const collectionRef = collection(db, "users");
-      const snapshot = await getCountFromServer(collectionRef);
-      var S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      var N = 3;
-      const count =
-        snapshot.data().count +
-        1 +
-        Array.from(crypto.getRandomValues(new Uint8Array(N)))
-          .map((n) => S[n % S.length])
-          .join("");
-      const docRef = doc(db, "users", IP.ip);
-      const docSnap = getDoc(docRef);
-
-      if (docSnap.exists) {
-        console.log("You already have a doc with this name!");
-      } else {
-        setDoc(doc(db, "users", IP.ip), {
-          id: String(count),
-        });
-      }
-    }
-  }
-
-  useEffect(() => {
-    temporallyRegister();
-  }, [IP]);
-
-  async function getID({ ipAddress }) {
-    const docRef = doc(db, "users", ipAddress);
-    const docSnap = await getDoc(docRef);
-    return docSnap.get("id");
-  }
 
   return (
     <>
@@ -513,7 +524,7 @@ function page() {
                               >
                                 {chat.author}
                                 <span className="italic text-zinc-500">
-                                  {getID(chat.IP.ip)}
+                                  ({chat.clientId})
                                 </span>
                               </b>
                             </p>
@@ -631,6 +642,7 @@ function page() {
                               ipInfo: IP,
                               Browser: browser,
                               sentAt: new Date(),
+                              clientId: clientUserId,
                               // id: chat_id
                             }
                           );
