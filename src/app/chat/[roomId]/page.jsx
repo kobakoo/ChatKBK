@@ -141,6 +141,8 @@ function page() {
     }
   }, []);
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     setUp();
   });
@@ -213,6 +215,7 @@ function page() {
 
       if (docSnap.exists) {
         console.log("You already have a doc with this name!");
+        setClientUserId(docSnap.get("id"));
       } else {
         if (IP.ip == null) {
           console.error(
