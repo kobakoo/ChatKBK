@@ -295,6 +295,7 @@ function page() {
                       ipInfo: IP,
                       browser: browser,
                       sentAt: new Date(),
+                      clientId: clientUserId,
                       // id: chat_id
                     }
                   );
@@ -498,6 +499,9 @@ function page() {
                               }
                             >
                               {chat.author}
+                              <span className="italic text-zinc-500">
+                                ({chat.clientId})
+                              </span>
                             </b>
                           </p>
                         </div>

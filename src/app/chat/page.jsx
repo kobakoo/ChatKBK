@@ -88,7 +88,6 @@ function page() {
           .join("");
       const docRef = doc(db, "users", IP.ip);
       const docSnap = getDoc(docRef);
-
       if (docSnap.exists) {
         console.log("You already have a doc with this name!");
       } else {
