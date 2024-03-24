@@ -480,7 +480,7 @@ function page() {
                 href={`https://chat.kobakoo.com/chat/${params.roomId}`}
               />
               <h1>{chats.name}</h1>
-              <div className=" my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen">
+              <div className="sm:my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen my-24">
                 {chats.map((chat) => (
                   <div key={chat.id} className="my-2" id={chat.id}>
                     <Link
