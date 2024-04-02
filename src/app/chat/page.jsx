@@ -162,8 +162,10 @@ function page() {
         </svg>
         <span className="sr-only">Info</span>
         <div>
-          <span className="font-bold">部屋の作成が行えるようになりました!</span>{" "}
-          少し変更して、もう一度投稿してみてください。
+          <span className="font-bold">
+            メッセージが送れるようになりました！
+          </span>{" "}
+          もう一度投稿してみてください。
         </div>
       </div>
       {/* <div
