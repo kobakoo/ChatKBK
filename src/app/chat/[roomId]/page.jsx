@@ -59,9 +59,8 @@ function page() {
   const [exist, setExist] = useState(true);
   const [createdBy, setCreatedBy] = useState("");
   const [createdByUserName, setCreatedByUserName] = useState("");
-  const [clientUserId, setClientUserId] = useState(
-    typeof window !== "undefined" ? localStorage.getItem("id") : ""
-  );
+  const [clientUserId, setClientUserId] = useState("");
+  const [whyUnsendable, setWhyUnsendable] = useState("");
   // const onEmojiClick = (event, emojiObject) => {
   //   setChosenEmoji(emojiObject);
   // };
@@ -141,8 +140,6 @@ function page() {
     }
   }, []);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     setUp();
   });
@@ -200,6 +197,7 @@ function page() {
 
   async function temporallyRegister() {
     if (IP.ip) {
+      console.log(IP.ip);
       const collectionRef = collection(db, "users");
       const snapshot = await getCountFromServer(collectionRef);
       var S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -215,7 +213,16 @@ function page() {
 
       if (docSnap.exists) {
         console.log("You already have a doc with this name!");
-        setClientUserId(docSnap.get("id"));
+        const id = docSnap.get("id");
+        if (id == undefined) {
+          await setDoc(doc(db, "users", IP.ip), {
+            id: String(count),
+          });
+          localStorage.setItem("id", String(count));
+          setClientUserId(String(count));
+        } else {
+          setClientUserId(id);
+        }
       } else {
         if (IP.ip == null) {
           console.error(
@@ -227,7 +234,14 @@ function page() {
           });
           localStorage.setItem("id", String(count));
           setClientUserId(String(count));
+          console.log(String(count));
         }
+      }
+    } else {
+      if (IP.ip == null) {
+        console.error(
+          "広告ブロッカーなどのトラッカー防止をオフにしてください。オフにしてある場合、これは一時的なエラーである可能性があります。"
+        );
       }
     }
   }
@@ -641,19 +655,24 @@ function page() {
                         if (message.length > 100) {
                           alert("メッセージが長すぎます!");
                         } else {
-                          addDoc(
-                            collection(db, "rooms", params.roomId, "chats"),
-                            {
-                              chat: message,
-                              author: author,
-                              ipInfo: IP,
-                              Browser: browser,
-                              sentAt: new Date(),
-                              clientId: clientUserId,
-                              // id: chat_id
-                            }
-                          );
-                          setMessage("");
+                          try {
+                            addDoc(
+                              collection(db, "rooms", params.roomId, "chats"),
+                              {
+                                chat: message,
+                                author: author,
+                                ipInfo: IP,
+                                Browser: browser,
+                                sentAt: new Date(),
+                                clientId: clientUserId,
+                                // id: chat_id
+                              }
+                            );
+                            setMessage("");
+                          } catch (err) {
+                            console.error(err.message);
+                            setWhyUnsendable(err.message);
+                          }
                         }
                       }
                     }}
