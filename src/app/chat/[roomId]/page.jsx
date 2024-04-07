@@ -37,7 +37,18 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import "animate.css";
 import Marquee from "react-fast-marquee";
-// import { db } from "@/lib/FirebaseConfig";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+import { visit } from "unist-util-visit";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
+import rehypeFormat from "rehype-format";
+import remarkDirective from "remark-directive";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkToc from "remark-toc";
+import remarkPresetLintMarkdownStyleGuide from 'remark-preset-lint-markdown-style-guide'
+import remarkHtml from "remark-html"// import { db } from "@/lib/FirebaseConfig";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -497,8 +508,7 @@ function page() {
               <div className="sm:my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen my-24">
                 {chats.map((chat) => (
                   <div key={chat.id} className="my-2" id={chat.id}>
-                    <Link
-                      href={`/chat/${params.roomId}#${chat.id}`}
+                    <div
                       className=""
                     >
                       {chat.type ? (
@@ -524,13 +534,26 @@ function page() {
                         </div>
                       ) : (
                         <p className="font-sans text-lg p-2 bg-sky-100 justify-between flex max-w-full">
-                          <p
-                            className="whitespace-pre-wrap truncate"
-                            id="aChat"
-                          >
+                          <p className="truncate markdown" as="p" id="aChat">
                             <ReactMarkdown
-                              remarkPlugins={[remarkMath]}
-                              rehypePlugins={[rehypeKatex]}
+                              className="markdown"
+                              remarkPlugins={[
+                                remarkFrontmatter,
+                                remarkMath,
+                                remarkGfm,
+                                remarkBreaks,
+                                remarkParse,
+                                remarkRehype,
+                                remarkDirective,
+                                remarkToc,
+                                remarkPresetLintMarkdownStyleGuide,
+                                remarkHtml
+                              ]}
+                              rehypePlugins={[
+                                rehypeKatex,
+                                rehypeStringify,
+                                rehypeFormat,
+                              ]}
                             >
                               {chat.chat}
                             </ReactMarkdown>
@@ -552,7 +575,7 @@ function page() {
                           </div>
                         </p>
                       )}
-                    </Link>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -652,27 +675,23 @@ function page() {
                       if (message === "") {
                         alert("メッセージが入力されていません💦");
                       } else {
-                        if (message.length > 100) {
-                          alert("メッセージが長すぎます!");
-                        } else {
-                          try {
-                            addDoc(
-                              collection(db, "rooms", params.roomId, "chats"),
-                              {
-                                chat: message,
-                                author: author,
-                                ipInfo: IP,
-                                Browser: browser,
-                                sentAt: new Date(),
-                                clientId: clientUserId,
-                                // id: chat_id
-                              }
-                            );
-                            setMessage("");
-                          } catch (err) {
-                            console.error(err.message);
-                            setWhyUnsendable(err.message);
-                          }
+                        try {
+                          addDoc(
+                            collection(db, "rooms", params.roomId, "chats"),
+                            {
+                              chat: message,
+                              author: author,
+                              ipInfo: IP,
+                              Browser: browser,
+                              sentAt: new Date(),
+                              clientId: clientUserId,
+                              // id: chat_id
+                            }
+                          );
+                          setMessage("");
+                        } catch (err) {
+                          console.error(err.message);
+                          setWhyUnsendable(err.message);
                         }
                       }
                     }}
