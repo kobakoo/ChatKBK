@@ -39,16 +39,7 @@ import "animate.css";
 import Marquee from "react-fast-marquee";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
-import { visit } from "unist-util-visit";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
-import rehypeFormat from "rehype-format";
-import remarkDirective from "remark-directive";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkToc from "remark-toc";
-import remarkPresetLintMarkdownStyleGuide from 'remark-preset-lint-markdown-style-guide'
-import remarkHtml from "remark-html"// import { db } from "@/lib/FirebaseConfig";
+// import { db } from "@/lib/FirebaseConfig";
 
 function page() {
   const [chats, setChats] = useState([]);
@@ -508,9 +499,7 @@ function page() {
               <div className="sm:my-20 md:mx-16 sm:mx-8 mx-2 max-w-screen my-24">
                 {chats.map((chat) => (
                   <div key={chat.id} className="my-2" id={chat.id}>
-                    <div
-                      className=""
-                    >
+                    <div className="">
                       {chat.type ? (
                         <div className="w-full p-3 bg-sky-100 sm:flex">
                           <img
@@ -538,22 +527,11 @@ function page() {
                             <ReactMarkdown
                               className="markdown"
                               remarkPlugins={[
-                                remarkFrontmatter,
                                 remarkMath,
                                 remarkGfm,
                                 remarkBreaks,
-                                remarkParse,
-                                remarkRehype,
-                                remarkDirective,
-                                remarkToc,
-                                remarkPresetLintMarkdownStyleGuide,
-                                remarkHtml
                               ]}
-                              rehypePlugins={[
-                                rehypeKatex,
-                                rehypeStringify,
-                                rehypeFormat,
-                              ]}
+                              rehypePlugins={[rehypeKatex]}
                             >
                               {chat.chat}
                             </ReactMarkdown>
