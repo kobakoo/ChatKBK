@@ -39,6 +39,7 @@ import "animate.css";
 import Marquee from "react-fast-marquee";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import CustomLink from "../../Components/CustomLink";
 // import { db } from "@/lib/FirebaseConfig";
 
 function page() {
@@ -532,6 +533,7 @@ function page() {
                                 remarkBreaks,
                               ]}
                               rehypePlugins={[rehypeKatex]}
+                              components={{ a: CustomLink }}
                             >
                               {chat.chat}
                             </ReactMarkdown>
