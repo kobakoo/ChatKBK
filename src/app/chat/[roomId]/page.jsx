@@ -39,7 +39,7 @@ import "animate.css";
 import Marquee from "react-fast-marquee";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
-import CustomLink from "../../Components/CustomLink";
+import CustomLink from "../../components/Customlink";
 // import { db } from "@/lib/FirebaseConfig";
 
 function page() {
