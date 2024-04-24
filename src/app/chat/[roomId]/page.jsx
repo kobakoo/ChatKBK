@@ -655,23 +655,27 @@ function page() {
                       if (message === "") {
                         alert("メッセージが入力されていません💦");
                       } else {
-                        try {
-                          addDoc(
-                            collection(db, "rooms", params.roomId, "chats"),
-                            {
-                              chat: message,
-                              author: author,
-                              ipInfo: IP,
-                              Browser: browser,
-                              sentAt: new Date(),
-                              clientId: clientUserId,
-                              // id: chat_id
-                            }
-                          );
-                          setMessage("");
-                        } catch (err) {
-                          console.error(err.message);
-                          setWhyUnsendable(err.message);
+                        if (message.length <= 150) {
+                          try {
+                            addDoc(
+                              collection(db, "rooms", params.roomId, "chats"),
+                              {
+                                chat: message,
+                                author: author,
+                                ipInfo: IP,
+                                Browser: browser,
+                                sentAt: new Date(),
+                                clientId: clientUserId,
+                                // id: chat_id
+                              }
+                            );
+                            setMessage("");
+                          } catch (err) {
+                            console.error(err.message);
+                            setWhyUnsendable(err.message);
+                          }
+                        } else {
+                          toast.error("メッセージが長すぎます！");
                         }
                       }
                     }}
