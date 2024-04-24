@@ -494,30 +494,34 @@ function page() {
                         ) {
                           alert("入力されていない欄がありますヨ");
                         } else {
-                          if (password === passwordCheck) {
-                            const docRef = await addDoc(
-                              collection(db, "rooms"),
-                              {
-                                name: name,
-                                password: password,
-                                enabled: enabled,
-                                published: showPublish,
-                                createdBy: IP.ip,
-                                createdByUserName: userName,
-                              }
-                            );
-                            closeModal();
-                            await setCreatedId(docRef.id);
-                            setIsOpenDesc(true);
-                            if (enabled === true) {
-                              alert(
-                                `パスワード付きの部屋、${name}が作成されました!`
+                          if (name.length < 30) {
+                            if (password === passwordCheck) {
+                              const docRef = await addDoc(
+                                collection(db, "rooms"),
+                                {
+                                  name: name,
+                                  password: password,
+                                  enabled: enabled,
+                                  published: showPublish,
+                                  createdBy: IP.ip,
+                                  createdByUserName: userName,
+                                }
                               );
+                              closeModal();
+                              await setCreatedId(docRef.id);
+                              setIsOpenDesc(true);
+                              if (enabled === true) {
+                                alert(
+                                  `パスワード付きの部屋、${name}が作成されました!`
+                                );
+                              } else {
+                                alert(`${name}が作成されました!`);
+                              }
                             } else {
-                              alert(`${name}が作成されました!`);
+                              alert("入力されたパスワードが一致していません");
                             }
                           } else {
-                            alert("入力されたパスワードが一致していません");
+                            alert("名前が長すぎます！");
                           }
                         }
                       }}
