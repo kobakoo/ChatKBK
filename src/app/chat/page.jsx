@@ -163,7 +163,7 @@ function page() {
         <span class="sr-only">Info</span>
         <div>
           <span class="font-bold">重要なお知らせ！</span>{" "}
-          主のお財布に大きな負担がかかっているので、現在存在している部屋を近日大幅削減します。
+          主のお財布に大きな負担がかかっているので、現在存在している部屋を近日大幅削減します！
         </div>
       </div>
       {/* <div
