@@ -533,7 +533,6 @@ function page() {
                                 remarkBreaks,
                               ]}
                               rehypePlugins={[rehypeKatex]}
-                              components={{ a: CustomLink }}
                             >
                               {chat.chat}
                             </ReactMarkdown>
