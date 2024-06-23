@@ -75,43 +75,21 @@ function page() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  // const pass = searchParams.get('pass');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // async function startUp() {
-  //   const docRef = doc(db, "rooms", params.roomId);
-  //   const docSnap = await getDoc(docRef);
-  //   // console.log(docSnap.data());
-  //   if (docSnap.get("enabled") === true) {
-  //     setEnabled(docSnap.get("enabled"));
-  //     setPassword(docSnap.get("password"));
-  //     setPass(searchParams.get("pass"));
-  //   } else {
-  //     setEnabled(false);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   startUp();
-  // });
-
-  // setTimeout(() => {setPass(searchParams.get("pass"))}, 1000);
-
-  // useEffect(() => {
-  //   if (password === pass) {
-  //     setEnabled(false);
-  //   } else {
-  //     setEnabled(true);
-  //   }
-  // }, [pass, password]);
-
-  // useEffect(() => {
-  //   console.log("created by:" + createdBy);
-  // }, [createdBy]);
-
-  // useEffect(() => {
-  //   console.log("IP:" + IP.ip);
-  // }, [IP.ip]);
+  useEffect(() => {
+    const urlPattern =
+      /^(https?:\/\/)?((localhost)|(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}))(:\d+)?(\/[^\s]*)?$/;
+    if (window.location.href) {
+      console.log(
+        window.location.href + " : " + urlPattern.test(window.location.href)
+      );
+      if (urlPattern.test(window.location.href) == false) {
+        toast.error("ファイルで開いているため、アクセスできませんでした");
+        console.error("ファイルで開いているため、アクセスできませんでした");
+        return;
+      }
+    }
+  }, []);
 
   async function setUp() {
     const docRef = doc(db, "rooms", params.roomId);
